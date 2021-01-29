@@ -9,6 +9,11 @@ import "../scss/style.scss";
 
  */
 
+ var CANVAS_WIDTH = 800;
+ var CANVAS_HEIGHT = 600;
+ var NANONAUT_WIDTH = 181;
+ var NANONAUT_HEIGHT = 229;
+ var GROUND_Y = 540;
 
  /*
   _  __                   __                          _                                  
@@ -20,6 +25,23 @@ import "../scss/style.scss";
 
 */
 
+var canvas = document.createElement("canvas");
+var c = canvas.getContext("2d");
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
+document.body.appendChild(canvas);
+
+var nanonautImage = new Image();
+nanonautImage.src = "img/Nanonaut.png";
+
+var nanonautX = 50;
+var nanonautY = 40;
+
+window.addEventListener("load", start);
+
+function start() {
+  window.requestAnimationFrame(mainLoop);
+}
 
 /*
   ____           _     _                     _     __                             
@@ -31,6 +53,12 @@ import "../scss/style.scss";
 
 */
 
+function mainLoop() {
+  update();
+  draw();
+  window.requestAnimationFrame(mainLoop);
+}
+
 /*
   ____    _                                                      _        
  / ___|  | |_    ___   _ __    ___   __      __   __ _   _ __   (_)   ___ 
@@ -39,6 +67,10 @@ import "../scss/style.scss";
  |____/   \__|  \___| |_|     \___/    \_/\_/    \__,_| |_| |_| |_|  \___|
 
  */
+
+ function update() {
+
+ }
 
  /*
       _      _      _                     _   _                          _         
@@ -50,6 +82,8 @@ import "../scss/style.scss";
 
 */
 
+
+
 /*
   ____                                                     _        
  |  _ \   _   _   ___    ___   __      __   __ _   _ __   (_)   ___ 
@@ -59,4 +93,10 @@ import "../scss/style.scss";
           |___/                                                     
 
 */
-                                                                          
+
+function draw() {
+  c.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+  //Narysuj nanonautę
+  c.drawImage(nanonautImage, nanonautX, nanonautY);
+}
