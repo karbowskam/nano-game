@@ -71,6 +71,10 @@ module.exports = {
             ],
           },
         },
+        {
+          from: "src/img/Nanonaut.png",
+          to: "img",
+        },
       ],
     }),
 
