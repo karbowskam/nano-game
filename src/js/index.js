@@ -9,13 +9,13 @@ import "../scss/style.scss";
 
  */
 
- var CANVAS_WIDTH = 800;
- var CANVAS_HEIGHT = 600;
- var NANONAUT_WIDTH = 181;
- var NANONAUT_HEIGHT = 229;
- var GROUND_Y = 540;
+var CANVAS_WIDTH = 800;
+var CANVAS_HEIGHT = 600;
+var NANONAUT_WIDTH = 181;
+var NANONAUT_HEIGHT = 229;
+var GROUND_Y = 540;
 
- /*
+/*
   _  __                   __                          _                                  
  | |/ /   ___    _ __    / _|       __      __  ___  | |_    ___   _ __    _ __     __ _ 
  | ' /   / _ \  | '_ \  | |_        \ \ /\ / / / __| | __|  / _ \ | '_ \  | '_ \   / _` |
@@ -36,6 +36,9 @@ nanonautImage.src = "img/Nanonaut.png";
 
 var nanonautX = 50;
 var nanonautY = 40;
+
+var backgroundImage = new Image();
+backgroundImage.src = "img/background.png";
 
 window.addEventListener("load", start);
 
@@ -68,12 +71,8 @@ function mainLoop() {
 
  */
 
- function update() {
-
- }
-
- /*
-      _      _      _                     _   _                          _         
+/*
+     _      _      _                     _   _                          _         
     / \    | | __ | |_   _   _    __ _  | | (_)  ____   __ _    ___    (_)   __ _ 
    / _ \   | |/ / | __| | | | |  / _` | | | | | |_  /  / _` |  / __|   | |  / _` |
   / ___ \  |   <  | |_  | |_| | | (_| | | | | |  / /  | (_| | | (__    | | | (_| |
@@ -82,7 +81,7 @@ function mainLoop() {
 
 */
 
-
+function update() {}
 
 /*
   ____                                                     _        
@@ -97,6 +96,17 @@ function mainLoop() {
 function draw() {
   c.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-  //Narysuj nanonautę
+  // Narysuj nanonautę
   c.drawImage(nanonautImage, nanonautX, nanonautY);
+
+  // Narysuj świat
+  c.fillStyle = "LightSkyBlue";
+  c.fillRect(0, 0, CANVAS_WIDTH, GROUND_Y - 40);
+
+  // Narysuj tło
+  c.drawImage(backgroundImage, 0, -210);
+
+  // Narysuj ziemię
+  c.fillStyle = "ForestGreen";
+  c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
 }
