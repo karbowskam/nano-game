@@ -81,7 +81,10 @@ function mainLoop() {
 
 */
 
-function update() {}
+function update() {
+  // Zaktualizuj Nanonautę
+  nanonautY = nanonautY + 1;
+}
 
 /*
   ____                                                     _        
@@ -96,10 +99,7 @@ function update() {}
 function draw() {
   c.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-  // Narysuj nanonautę
-  c.drawImage(nanonautImage, nanonautX, nanonautY);
-
-  // Narysuj świat
+  // Narysuj niebo
   c.fillStyle = "LightSkyBlue";
   c.fillRect(0, 0, CANVAS_WIDTH, GROUND_Y - 40);
 
@@ -109,4 +109,7 @@ function draw() {
   // Narysuj ziemię
   c.fillStyle = "ForestGreen";
   c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
+
+  // Narysuj nanonautę
+  c.drawImage(nanonautImage, nanonautX, nanonautY);
 }
