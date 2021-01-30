@@ -68,12 +68,10 @@ function mainLoop() {
 
  */
 
- function update() {
-
- }
+ 
 
  /*
-      _      _      _                     _   _                          _         
+     _      _      _                     _   _                          _         
     / \    | | __ | |_   _   _    __ _  | | (_)  ____   __ _    ___    (_)   __ _ 
    / _ \   | |/ / | __| | | | |  / _` | | | | | |_  /  / _` |  / __|   | |  / _` |
   / ___ \  |   <  | |_  | |_| | | (_| | | | | |  / /  | (_| | | (__    | | | (_| |
@@ -82,7 +80,9 @@ function mainLoop() {
 
 */
 
+function update() {
 
+}
 
 /*
   ____                                                     _        
@@ -99,4 +99,13 @@ function draw() {
 
   //Narysuj nanonautę
   c.drawImage(nanonautImage, nanonautX, nanonautY);
+
+//Narysuj świat
+c.fillStyle = "LightSkyBlue";
+c.fillRect(0, 0,CANVAS_WIDTH, GROUND_Y - 40);
+
+// Narysuj ziemię
+c.fillStyle = "ForestGreen";
+c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
+
 }
