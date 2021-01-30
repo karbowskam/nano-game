@@ -14,6 +14,7 @@ var CANVAS_HEIGHT = 600;
 var NANONAUT_WIDTH = 181;
 var NANONAUT_HEIGHT = 229;
 var GROUND_Y = 540;
+var NANONAUT_Y_ACCELERATION = 1;
 
 /*
   _  __                   __                          _                                  
@@ -45,6 +46,8 @@ window.addEventListener("load", start);
 function start() {
   window.requestAnimationFrame(mainLoop);
 }
+
+var nanonautYSpeed = 0;
 
 /*
   ____           _     _                     _     __                             
@@ -83,7 +86,12 @@ function mainLoop() {
 
 function update() {
   // Zaktualizuj Nanonautę
-  nanonautY = nanonautY + 1;
+  nanonautY = nanonautY + nanonautYSpeed;
+  nanonautYSpeed = nanonautYSpeed + NANONAUT_Y_ACCELERATION;
+  if (nanonautY > GROUND_Y - NANONAUT_HEIGHT) {
+    nanonautY = GROUND_Y - NANONAUT_HEIGHT;
+    nanonautYSpeed = 0;
+  }
 }
 
 /*
