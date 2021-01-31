@@ -11,10 +11,14 @@ import "../scss/style.scss";
 
 var CANVAS_WIDTH = 800;
 var CANVAS_HEIGHT = 600;
-var NANONAUT_WIDTH = 181;
+// var NANONAUT_WIDTH = 181;
 var NANONAUT_HEIGHT = 229;
 var GROUND_Y = 540;
 var NANONAUT_Y_ACCELERATION = 1;
+var SPACE_KEYCODE = 32;
+var NANONAUT_JUMP_SPEED = 20;
+var NANONAUT_X_SPEED = 5;
+var BACKGROUND_WIDTH = 1000;
 
 /*
   _  __                   __                          _                                  
@@ -35,12 +39,14 @@ document.body.appendChild(canvas);
 var nanonautImage = new Image();
 nanonautImage.src = "img/Nanonaut.png";
 
-var nanonautX = 50;
-var nanonautY = 40;
+var nanonautX = CANVAS_WIDTH / 2;
+var nanonautY = GROUND_Y - NANONAUT_HEIGHT;
 
 var backgroundImage = new Image();
 backgroundImage.src = "img/background.png";
 
+window.addEventListener("keydown", onKeyDown);
+window.addEventListener("keyup", onKeyUp);
 window.addEventListener("load", start);
 
 function start() {
@@ -48,6 +54,11 @@ function start() {
 }
 
 var nanonautYSpeed = 0;
+var nanonautIsInTheAir = false;
+var spaceKeyIsPressed = false;
+
+var cameraX = 0;
+var cameraY = 0;
 
 /*
   ____           _     _                     _     __                             
@@ -74,6 +85,18 @@ function mainLoop() {
 
  */
 
+function onKeyDown(event) {
+if (event.keyCode === SPACE_KEYCODE) {
+  spaceKeyIsPressed = true;
+}
+}
+
+function onKeyUp(event) {
+  if (event.keyCode === SPACE_KEYCODE) {
+    spaceKeyIsPressed = false;
+  }
+}
+
 /*
      _      _      _                     _   _                          _         
     / \    | | __ | |_   _   _    __ _  | | (_)  ____   __ _    ___    (_)   __ _ 
@@ -85,13 +108,22 @@ function mainLoop() {
 */
 
 function update() {
+  nanonautX = nanonautX + NANONAUT_X_SPEED;
+  if (spaceKeyIsPressed && !nanonautIsInTheAir) {
+    nanonautYSpeed = -NANONAUT_JUMP_SPEED;
+    nanonautIsInTheAir = true;
+  }
   // Zaktualizuj Nanonautę
   nanonautY = nanonautY + nanonautYSpeed;
   nanonautYSpeed = nanonautYSpeed + NANONAUT_Y_ACCELERATION;
   if (nanonautY > GROUND_Y - NANONAUT_HEIGHT) {
     nanonautY = GROUND_Y - NANONAUT_HEIGHT;
     nanonautYSpeed = 0;
+    nanonautIsInTheAir = false;
+  
   }
+  // Zaktualizuj kamerę
+  cameraX = nanonautX - 150;
 }
 
 /*
@@ -112,12 +144,14 @@ function draw() {
   c.fillRect(0, 0, CANVAS_WIDTH, GROUND_Y - 40);
 
   // Narysuj tło
-  c.drawImage(backgroundImage, 0, -210);
+  var backgroundX = - (cameraX % BACKGROUND_WIDTH);
+  c.drawImage(backgroundImage, backgroundX, -210);
+  c.drawImage(backgroundImage, backgroundX + BACKGROUND_WIDTH , -210);
 
   // Narysuj ziemię
   c.fillStyle = "ForestGreen";
   c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
 
   // Narysuj nanonautę
-  c.drawImage(nanonautImage, nanonautX, nanonautY);
+  c.drawImage(nanonautImage, nanonautX - cameraX, nanonautY - cameraY);
 }
