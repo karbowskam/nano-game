@@ -11,10 +11,12 @@ import "../scss/style.scss";
 
 var CANVAS_WIDTH = 800;
 var CANVAS_HEIGHT = 600;
-var NANONAUT_WIDTH = 181;
+// var NANONAUT_WIDTH = 181;
 var NANONAUT_HEIGHT = 229;
 var GROUND_Y = 540;
 var NANONAUT_Y_ACCELERATION = 1;
+var SPACE_KEYCODE = 32;
+var NANONAUT_JUMP_SPEED = 20;
 
 /*
   _  __                   __                          _                                  
@@ -42,6 +44,7 @@ var backgroundImage = new Image();
 backgroundImage.src = "img/background.png";
 
 window.addEventListener("keydown", onKeyDown);
+window.addEventListener("keyup", onKeyUp);
 window.addEventListener("load", start);
 
 function start() {
@@ -49,6 +52,8 @@ function start() {
 }
 
 var nanonautYSpeed = 0;
+var nanonautIsInTheAir = false;
+var spaceKeyIsPressed = false;
 
 /*
   ____           _     _                     _     __                             
@@ -76,7 +81,15 @@ function mainLoop() {
  */
 
 function onKeyDown(event) {
-  console.log(event.keyCode);
+if (event.keyCode === SPACE_KEYCODE) {
+  spaceKeyIsPressed = true;
+}
+}
+
+function onKeyUp(event) {
+  if (event.keyCode === SPACE_KEYCODE) {
+    spaceKeyIsPressed = false;
+  }
 }
 
 /*
@@ -90,12 +103,18 @@ function onKeyDown(event) {
 */
 
 function update() {
+  if (spaceKeyIsPressed && !nanonautIsInTheAir) {
+    nanonautYSpeed = -NANONAUT_JUMP_SPEED;
+    nanonautIsInTheAir = true;
+  }
   // Zaktualizuj Nanonautę
   nanonautY = nanonautY + nanonautYSpeed;
   nanonautYSpeed = nanonautYSpeed + NANONAUT_Y_ACCELERATION;
   if (nanonautY > GROUND_Y - NANONAUT_HEIGHT) {
     nanonautY = GROUND_Y - NANONAUT_HEIGHT;
     nanonautYSpeed = 0;
+    nanonautIsInTheAir = false;
+    
   }
 }
 
