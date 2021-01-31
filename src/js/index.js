@@ -41,6 +41,7 @@ var nanonautY = 40;
 var backgroundImage = new Image();
 backgroundImage.src = "img/background.png";
 
+window.addEventListener("keydown", onKeyDown);
 window.addEventListener("load", start);
 
 function start() {
@@ -73,6 +74,10 @@ function mainLoop() {
  |____/   \__|  \___| |_|     \___/    \_/\_/    \__,_| |_| |_| |_|  \___|
 
  */
+
+function onKeyDown(event) {
+  console.log(event.keyCode);
+}
 
 /*
      _      _      _                     _   _                          _         
