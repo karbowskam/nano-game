@@ -17,6 +17,7 @@ var GROUND_Y = 540;
 var NANONAUT_Y_ACCELERATION = 1;
 var SPACE_KEYCODE = 32;
 var NANONAUT_JUMP_SPEED = 20;
+var NANONAUT_X_SPEED = 5;
 
 /*
   _  __                   __                          _                                  
@@ -54,6 +55,9 @@ function start() {
 var nanonautYSpeed = 0;
 var nanonautIsInTheAir = false;
 var spaceKeyIsPressed = false;
+
+var cameraX = 0;
+var cameraY = 0;
 
 /*
   ____           _     _                     _     __                             
@@ -103,6 +107,7 @@ function onKeyUp(event) {
 */
 
 function update() {
+  nanonautX = nanonautX + NANONAUT_X_SPEED;
   if (spaceKeyIsPressed && !nanonautIsInTheAir) {
     nanonautYSpeed = -NANONAUT_JUMP_SPEED;
     nanonautIsInTheAir = true;
@@ -114,8 +119,10 @@ function update() {
     nanonautY = GROUND_Y - NANONAUT_HEIGHT;
     nanonautYSpeed = 0;
     nanonautIsInTheAir = false;
-    
+  
   }
+  // Zaktualizuj kamerę
+  cameraX = nanonautX - 150;
 }
 
 /*
@@ -136,12 +143,12 @@ function draw() {
   c.fillRect(0, 0, CANVAS_WIDTH, GROUND_Y - 40);
 
   // Narysuj tło
-  c.drawImage(backgroundImage, 0, -210);
+  c.drawImage(backgroundImage, 0 - cameraX, -210);
 
   // Narysuj ziemię
   c.fillStyle = "ForestGreen";
   c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
 
   // Narysuj nanonautę
-  c.drawImage(nanonautImage, nanonautX, nanonautY);
+  c.drawImage(nanonautImage, nanonautX - cameraX, nanonautY - cameraY);
 }
