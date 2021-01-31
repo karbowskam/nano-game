@@ -18,6 +18,7 @@ var NANONAUT_Y_ACCELERATION = 1;
 var SPACE_KEYCODE = 32;
 var NANONAUT_JUMP_SPEED = 20;
 var NANONAUT_X_SPEED = 5;
+var BACKGROUND_WIDTH = 1000;
 
 /*
   _  __                   __                          _                                  
@@ -38,8 +39,8 @@ document.body.appendChild(canvas);
 var nanonautImage = new Image();
 nanonautImage.src = "img/Nanonaut.png";
 
-var nanonautX = 50;
-var nanonautY = 40;
+var nanonautX = CANVAS_WIDTH / 2;
+var nanonautY = GROUND_Y - NANONAUT_HEIGHT;
 
 var backgroundImage = new Image();
 backgroundImage.src = "img/background.png";
@@ -143,7 +144,9 @@ function draw() {
   c.fillRect(0, 0, CANVAS_WIDTH, GROUND_Y - 40);
 
   // Narysuj tło
-  c.drawImage(backgroundImage, 0 - cameraX, -210);
+  var backgroundX = - (cameraX % BACKGROUND_WIDTH);
+  c.drawImage(backgroundImage, backgroundX, -210);
+  c.drawImage(backgroundImage, backgroundX + BACKGROUND_WIDTH , -210);
 
   // Narysuj ziemię
   c.fillStyle = "ForestGreen";
