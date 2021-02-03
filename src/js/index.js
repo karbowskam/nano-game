@@ -65,6 +65,9 @@ var cameraX = 0;
 var cameraY = 0;
 
 var gameFrameCounter = 0;
+
+var bush1Image = new Image ();
+bush1Image.src = "img/bush1.png";
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
