@@ -21,6 +21,7 @@ var NANONAUT_X_SPEED = 5;
 var BACKGROUND_WIDTH = 1000;
 var NANONAUT_NR_FRAMES_PER_ROW = 5;
 var NANONAUT_NR_ANIMATION_FRAMES = 7;
+var NANONAUT_ANIMATION_SPEED = 3;
 
 /*
   _  __                   __                          _                                  
@@ -63,6 +64,7 @@ var nanonautFrameNr = 0;
 var cameraX = 0;
 var cameraY = 0;
 
+var gameFrameCounter = 0;
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -111,6 +113,7 @@ function onKeyUp(event) {
 */
 
 function update() {
+  gameFrameCounter = gameFrameCounter + 1;
   nanonautX = nanonautX + NANONAUT_X_SPEED;
   if (spaceKeyIsPressed && !nanonautIsInTheAir) {
     nanonautYSpeed = -NANONAUT_JUMP_SPEED;
@@ -125,9 +128,11 @@ function update() {
     nanonautIsInTheAir = false;
   }
   //Zaktualizuj animację
+  if ((gameFrameCounter % NANONAUT_ANIMATION_SPEED) === 0) {
   nanonautFrameNr = nanonautFrameNr + 1;
   if (nanonautFrameNr >= NANONAUT_NR_ANIMATION_FRAMES) {
     nanonautFrameNr = 0;
+  }
   }
   // Zaktualizuj kamerę
   cameraX = nanonautX - 150;
