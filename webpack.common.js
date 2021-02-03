@@ -72,7 +72,7 @@ module.exports = {
           },
         },
         {
-          from: "src/img/Nanonaut.png",
+          from: "src/img/animatedNanonaut.png",
           to: "img",
         },
         {
