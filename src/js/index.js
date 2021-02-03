@@ -66,7 +66,7 @@ var cameraY = 0;
 
 var gameFrameCounter = 0;
 
-var bush1Image = new Image ();
+var bush1Image = new Image();
 bush1Image.src = "img/bush1.png";
 /*
   ____           _     _                     _     __                             
@@ -131,15 +131,14 @@ function update() {
     nanonautIsInTheAir = false;
   }
   //Zaktualizuj animację
-  if ((gameFrameCounter % NANONAUT_ANIMATION_SPEED) === 0) {
-  nanonautFrameNr = nanonautFrameNr + 1;
-  if (nanonautFrameNr >= NANONAUT_NR_ANIMATION_FRAMES) {
-    nanonautFrameNr = 0;
-  }
+  if (gameFrameCounter % NANONAUT_ANIMATION_SPEED === 0) {
+    nanonautFrameNr = nanonautFrameNr + 1;
+    if (nanonautFrameNr >= NANONAUT_NR_ANIMATION_FRAMES) {
+      nanonautFrameNr = 0;
+    }
   }
   // Zaktualizuj kamerę
   cameraX = nanonautX - 150;
-  
 }
 
 /*
@@ -186,4 +185,8 @@ function draw() {
     NANONAUT_WIDTH,
     NANONAUT_HEIGHT
   );
+
+  //Narysuj busz
+  c.drawImage(bush1Image, 550, GROUND_Y - 100);
+  c.drawImage(bush1Image, 750, GROUND_Y - 90);
 }
