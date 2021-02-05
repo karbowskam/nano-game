@@ -72,16 +72,18 @@ bush1Image.src = "img/bush1.png";
 var bush2Image = new Image();
 bush2Image.src = "img/bush2.png";
 
-var bushData = [{
-  x: 550,
-  y: 100,
-  image: bush1Image
-},
- {
-  x: 750,
-  y: 90,
-  image: bush2Image
- }];
+var bushData = [
+  {
+    x: 550,
+    y: 100,
+    image: bush1Image,
+  },
+  {
+    x: 750,
+    y: 90,
+    image: bush2Image,
+  },
+];
 
 /*
   ____           _     _                     _     __                             
@@ -154,8 +156,14 @@ function update() {
   }
   // Zaktualizuj kamerę
   cameraX = nanonautX - 150;
-}
 
+  // Zaktualizuj krzaczki
+  for (var i = 0; i < bushData.length; i++) {
+    if (bushData[i].x - cameraX < -CANVAS_WIDTH) {
+      bushData[i].x += 2 * CANVAS_WIDTH + 150;
+    }
+  }
+}
 /*
   ____                                                     _        
  |  _ \   _   _   ___    ___   __      __   __ _   _ __   (_)   ___ 
@@ -201,8 +209,12 @@ function draw() {
     NANONAUT_HEIGHT
   );
 
-  //Narysuj busz
-  for (var i=0; i<bushXCoordinates.length; i++ ) {
-    c.drawImage(bush1Image, bushXCoordinates[i] - cameraX, GROUND_Y - 100 - cameraY);
+  //Narysuj krzaczki
+  for (var i = 0; i < bushData.length; i++) {
+    c.drawImage(
+      bushData[i].image,
+      bushData[i].x - cameraX,
+      GROUND_Y - bushData[i].y - cameraY
+    );
   }
 }
