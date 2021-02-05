@@ -65,6 +65,35 @@ var cameraX = 0;
 var cameraY = 0;
 
 var gameFrameCounter = 0;
+
+var bush1Image = new Image();
+bush1Image.src = "img/bush1.png";
+
+var bush2Image = new Image();
+bush2Image.src = "img/bush2.png";
+
+var bushData = generateBushes();
+
+function generateBushes() {
+  var generatedBushData = [];
+  var bushX = 0;
+  while (bushX < (2 * CANVAS_WIDTH)) {
+    var bushImage;
+    if (Math.random() >= 0.5) {
+    bushImage = bush1Image;
+  }
+   else {
+     bushImage = bush2Image;
+   }
+  generatedBushData.push({
+    x: bushX,
+    y: 80 + Math.random() * 20,
+    image: bushImage
+  });
+  bushX += 150 + Math.random() * 200;
+  }
+  return generatedBushData;
+}
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -128,17 +157,22 @@ function update() {
     nanonautIsInTheAir = false;
   }
   //Zaktualizuj animację
-  if ((gameFrameCounter % NANONAUT_ANIMATION_SPEED) === 0) {
-  nanonautFrameNr = nanonautFrameNr + 1;
-  if (nanonautFrameNr >= NANONAUT_NR_ANIMATION_FRAMES) {
-    nanonautFrameNr = 0;
-  }
+  if (gameFrameCounter % NANONAUT_ANIMATION_SPEED === 0) {
+    nanonautFrameNr = nanonautFrameNr + 1;
+    if (nanonautFrameNr >= NANONAUT_NR_ANIMATION_FRAMES) {
+      nanonautFrameNr = 0;
+    }
   }
   // Zaktualizuj kamerę
   cameraX = nanonautX - 150;
-  
-}
 
+  // Zaktualizuj krzaczki
+  for (var i = 0; i < bushData.length; i++) {
+    if (bushData[i].x - cameraX < -CANVAS_WIDTH) {
+      bushData[i].x += 2 * CANVAS_WIDTH + 150;
+    }
+  }
+}
 /*
   ____                                                     _        
  |  _ \   _   _   ___    ___   __      __   __ _   _ __   (_)   ___ 
@@ -183,4 +217,13 @@ function draw() {
     NANONAUT_WIDTH,
     NANONAUT_HEIGHT
   );
+
+  //Narysuj krzaczki
+  for (var i = 0; i < bushData.length; i++) {
+    c.drawImage(
+      bushData[i].image,
+      bushData[i].x - cameraX,
+      GROUND_Y - bushData[i].y - cameraY
+    );
+  }
 }
