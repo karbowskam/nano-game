@@ -72,19 +72,22 @@ bush1Image.src = "img/bush1.png";
 var bush2Image = new Image();
 bush2Image.src = "img/bush2.png";
 
-var bushData = [
-  {
-    x: 550,
-    y: 100,
-    image: bush1Image,
-  },
-  {
-    x: 750,
-    y: 90,
-    image: bush2Image,
-  },
-];
+var bushData = generateBushes();
 
+function generateBushes() {
+  // TODO: uzupełnij kod, na razie nie działa (nic nie robi);
+  var generatedBushData = [];
+  var bushX = 0;
+  for (var i=0; i<10; i++) {
+  generatedBushData.push({
+    x: bushX,
+    y: 80 + Math.random() * 20,
+    image: bush1Image
+  });
+  bushX += 150 + Math.random() * 200;
+  }
+  return generatedBushData;
+}
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
