@@ -68,6 +68,21 @@ var gameFrameCounter = 0;
 
 var bush1Image = new Image();
 bush1Image.src = "img/bush1.png";
+
+var bush2Image = new Image();
+bush2Image.src = "img/bush2.png";
+
+var bushData = [{
+  x: 550,
+  y: 100,
+  image: bush1Image
+},
+ {
+  x: 750,
+  y: 90,
+  image: bush2Image
+ }];
+
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -187,6 +202,7 @@ function draw() {
   );
 
   //Narysuj busz
-  c.drawImage(bush1Image, 550, GROUND_Y - 100);
-  c.drawImage(bush1Image, 750, GROUND_Y - 90);
+  for (var i=0; i<bushXCoordinates.length; i++ ) {
+    c.drawImage(bush1Image, bushXCoordinates[i] - cameraX, GROUND_Y - 100 - cameraY);
+  }
 }
