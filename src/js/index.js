@@ -19,9 +19,10 @@ var SPACE_KEYCODE = 32;
 var NANONAUT_JUMP_SPEED = 20;
 var NANONAUT_X_SPEED = 5;
 var BACKGROUND_WIDTH = 1000;
-var NANONAUT_NR_FRAMES_PER_ROW = 5;
 var NANONAUT_NR_ANIMATION_FRAMES = 7;
 var NANONAUT_ANIMATION_SPEED = 3;
+var ROBOT_WIDTH = 141;
+var ROBOT_HEIGHT = 139;
 
 /*
   _  __                   __                          _                                  
@@ -72,25 +73,42 @@ bush1Image.src = "img/bush1.png";
 var bush2Image = new Image();
 bush2Image.src = "img/bush2.png";
 
+var robotImage = new Image();
+robotImage.src = "img/animatedRobot.png";
+
+var robotSpriteSheet = {
+  nrFramesPerRow: 3,
+  spriteWidth: ROBOT_WIDTH,
+  spriteHeight: ROBOT_HEIGHT,
+  image: robotImage,
+};
+
+var robotData = [
+  {
+    x: 400,
+    y: GROUND_Y - ROBOT_HEIGHT,
+    frameNr: 0,
+  },
+];
+
 var bushData = generateBushes();
 
 function generateBushes() {
   var generatedBushData = [];
   var bushX = 0;
-  while (bushX < (2 * CANVAS_WIDTH)) {
+  while (bushX < 2 * CANVAS_WIDTH) {
     var bushImage;
     if (Math.random() >= 0.5) {
-    bushImage = bush1Image;
-  }
-   else {
-     bushImage = bush2Image;
-   }
-  generatedBushData.push({
-    x: bushX,
-    y: 80 + Math.random() * 20,
-    image: bushImage
-  });
-  bushX += 150 + Math.random() * 200;
+      bushImage = bush1Image;
+    } else {
+      bushImage = bush2Image;
+    }
+    generatedBushData.push({
+      x: bushX,
+      y: 80 + Math.random() * 20,
+      image: bushImage,
+    });
+    bushX += 150 + Math.random() * 200;
   }
   return generatedBushData;
 }
@@ -98,8 +116,8 @@ var nanonautSpriteSheet = {
   nrFramesPerRow: 5,
   spriteWidth: NANONAUT_WIDTH,
   spriteHeight: NANONAUT_HEIGHT,
-  image: nanonautImage
-}
+  image: nanonautImage,
+};
 
 /*
   ____           _     _                     _     __                             
@@ -207,7 +225,7 @@ function draw() {
   c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
 
   // Narysuj nanonautę
-  var nanonautSpriteSheetRow = Math.floor(
+  /*var nanonautSpriteSheetRow = Math.floor(
     nanonautFrameNr / NANONAUT_NR_FRAMES_PER_ROW
   );
   var nanonautSpriteSheetColumn = nanonautFrameNr % NANONAUT_NR_FRAMES_PER_ROW;
@@ -224,7 +242,7 @@ function draw() {
     NANONAUT_WIDTH,
     NANONAUT_HEIGHT
   );
-
+*/
   //Narysuj krzaczki
   for (var i = 0; i < bushData.length; i++) {
     c.drawImage(
@@ -233,6 +251,24 @@ function draw() {
       GROUND_Y - bushData[i].y - cameraY
     );
   }
+
+  //Narysuj roboty
+  for (var j = 0; j < robotData.length; j++) {
+    drawAnimatedSprite(
+      robotData[j].x - cameraX,
+      robotData[j].y - cameraY,
+      robotData[j].frameNr,
+      robotSpriteSheet
+    );
+  }
+
+  //Narysuj Nanonautę
+  drawAnimatedSprite(
+    nanonautX - cameraX,
+    nanonautY - cameraY,
+    nanonautFrameNr,
+    nanonautSpriteSheet
+  );
 
   //Narysuj animowanego duszka
   function drawAnimatedSprite(screenX, screenY, frameNr, spriteSheet) {
@@ -243,10 +279,14 @@ function draw() {
 
     c.drawImage(
       spriteSheet.image,
-      spriteSheetX, spriteSheetY,
-      spriteSheet.spriteWidth, spriteSheet.spriteHeight, screenX, screenY,
-      spriteSheet.spriteWidth, spriteSheet.spriteHeight
+      spriteSheetX,
+      spriteSheetY,
+      spriteSheet.spriteWidth,
+      spriteSheet.spriteHeight,
+      screenX,
+      screenY,
+      spriteSheet.spriteWidth,
+      spriteSheet.spriteHeight
     );
   }
-
 }
