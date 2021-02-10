@@ -87,6 +87,10 @@ module.exports = {
           from: "src/img/bush2.png",
           to: "img",
         },
+        {
+          from: "src/img/animatedRobot.png",
+          to: "img",
+        },
       ],
     }),
 

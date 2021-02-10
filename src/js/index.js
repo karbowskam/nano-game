@@ -19,10 +19,16 @@ var SPACE_KEYCODE = 32;
 var NANONAUT_JUMP_SPEED = 20;
 var NANONAUT_X_SPEED = 5;
 var BACKGROUND_WIDTH = 1000;
-var NANONAUT_NR_FRAMES_PER_ROW = 5;
 var NANONAUT_NR_ANIMATION_FRAMES = 7;
 var NANONAUT_ANIMATION_SPEED = 3;
-
+var ROBOT_WIDTH = 141;
+var ROBOT_HEIGHT = 139;
+var ROBOT_NR_ANIMATION_FRAMES = 9;
+var ROBOT_ANIMATION_SPEED = 5;
+var ROBOT_X_SPEED = 4;
+var MIN_DISTANCE_BETWEEN_ROBOTS = 400;
+var MAX_DISTANCE_BETWEEN_ROBOTS = 1200;
+var MAX_ACTIVE_ROBOTS = 3;
 /*
   _  __                   __                          _                                  
  | |/ /   ___    _ __    / _|       __      __  ___  | |_    ___   _ __    _ __     __ _ 
@@ -72,28 +78,52 @@ bush1Image.src = "img/bush1.png";
 var bush2Image = new Image();
 bush2Image.src = "img/bush2.png";
 
+var robotImage = new Image();
+robotImage.src = "img/animatedRobot.png";
+
+var robotSpriteSheet = {
+  nrFramesPerRow: 3,
+  spriteWidth: ROBOT_WIDTH,
+  spriteHeight: ROBOT_HEIGHT,
+  image: robotImage,
+};
+
+var robotData = [
+  {
+    x: 400,
+    y: GROUND_Y - ROBOT_HEIGHT,
+    frameNr: 0,
+  },
+];
+
 var bushData = generateBushes();
 
 function generateBushes() {
   var generatedBushData = [];
   var bushX = 0;
-  while (bushX < (2 * CANVAS_WIDTH)) {
+  while (bushX < 2 * CANVAS_WIDTH) {
     var bushImage;
     if (Math.random() >= 0.5) {
-    bushImage = bush1Image;
-  }
-   else {
-     bushImage = bush2Image;
-   }
-  generatedBushData.push({
-    x: bushX,
-    y: 80 + Math.random() * 20,
-    image: bushImage
-  });
-  bushX += 150 + Math.random() * 200;
+      bushImage = bush1Image;
+    } else {
+      bushImage = bush2Image;
+    }
+    generatedBushData.push({
+      x: bushX,
+      y: 80 + Math.random() * 20,
+      image: bushImage,
+    });
+    bushX += 150 + Math.random() * 200;
   }
   return generatedBushData;
 }
+var nanonautSpriteSheet = {
+  nrFramesPerRow: 5,
+  spriteWidth: NANONAUT_WIDTH,
+  spriteHeight: NANONAUT_HEIGHT,
+  image: nanonautImage,
+};
+
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -172,6 +202,45 @@ function update() {
       bushData[i].x += 2 * CANVAS_WIDTH + 150;
     }
   }
+
+  //Zaktualizuj roboty
+  updateRobots();
+}
+
+function updateRobots() {
+  // Przemieszczanie i animowanie robotów
+  for (var k = 0; k < robotData.length; k++) {
+    robotData[k].x -= ROBOT_X_SPEED;
+    if (gameFrameCounter % ROBOT_ANIMATION_SPEED === 0) {
+      robotData[k].frameNr = robotData[k].frameNr + 1;
+      if (robotData[k].frameNr >= ROBOT_NR_ANIMATION_FRAMES) {
+        robotData[k].frameNr = 0;
+      }
+    }
+  }
+  // Usuń roboty, które znalazły się poza ekranem
+  var robotIndex = 0;
+  while (robotIndex < robotData.length) {
+    if (robotData[robotIndex].x < cameraX - ROBOT_WIDTH) {
+      robotData.splice(robotIndex, 1);
+      console.log("Usunięto robota!");
+    } else {
+      robotIndex += 1;
+    }
+  }
+  if (robotData.length < MAX_ACTIVE_ROBOTS) {
+    var lastRobotX = robotData[robotData.length - 1].x;
+    var newRobotX =
+      lastRobotX +
+      MIN_DISTANCE_BETWEEN_ROBOTS +
+      Math.random() *
+        (MAX_DISTANCE_BETWEEN_ROBOTS - MIN_DISTANCE_BETWEEN_ROBOTS);
+    robotData.push({
+      x: newRobotX,
+      y: GROUND_Y - ROBOT_HEIGHT,
+      frameNr: 0,
+    });
+  }
 }
 /*
   ____                                                     _        
@@ -200,7 +269,7 @@ function draw() {
   c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
 
   // Narysuj nanonautę
-  var nanonautSpriteSheetRow = Math.floor(
+  /*var nanonautSpriteSheetRow = Math.floor(
     nanonautFrameNr / NANONAUT_NR_FRAMES_PER_ROW
   );
   var nanonautSpriteSheetColumn = nanonautFrameNr % NANONAUT_NR_FRAMES_PER_ROW;
@@ -217,13 +286,51 @@ function draw() {
     NANONAUT_WIDTH,
     NANONAUT_HEIGHT
   );
-
+*/
   //Narysuj krzaczki
   for (var i = 0; i < bushData.length; i++) {
     c.drawImage(
       bushData[i].image,
       bushData[i].x - cameraX,
       GROUND_Y - bushData[i].y - cameraY
+    );
+  }
+
+  //Narysuj roboty
+  for (var j = 0; j < robotData.length; j++) {
+    drawAnimatedSprite(
+      robotData[j].x - cameraX,
+      robotData[j].y - cameraY,
+      robotData[j].frameNr,
+      robotSpriteSheet
+    );
+  }
+
+  //Narysuj Nanonautę
+  drawAnimatedSprite(
+    nanonautX - cameraX,
+    nanonautY - cameraY,
+    nanonautFrameNr,
+    nanonautSpriteSheet
+  );
+
+  //Narysuj animowanego duszka
+  function drawAnimatedSprite(screenX, screenY, frameNr, spriteSheet) {
+    var spriteSheetRow = Math.floor(frameNr / spriteSheet.nrFramesPerRow);
+    var spriteSheetColumn = frameNr % spriteSheet.nrFramesPerRow;
+    var spriteSheetX = spriteSheetColumn * spriteSheet.spriteWidth;
+    var spriteSheetY = spriteSheetRow * spriteSheet.spriteHeight;
+
+    c.drawImage(
+      spriteSheet.image,
+      spriteSheetX,
+      spriteSheetY,
+      spriteSheet.spriteWidth,
+      spriteSheet.spriteHeight,
+      screenX,
+      screenY,
+      spriteSheet.spriteWidth,
+      spriteSheet.spriteHeight
     );
   }
 }
