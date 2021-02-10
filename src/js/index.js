@@ -88,13 +88,7 @@ var robotSpriteSheet = {
   image: robotImage,
 };
 
-var robotData = [
-  {
-    x: 400,
-    y: GROUND_Y - ROBOT_HEIGHT,
-    frameNr: 0,
-  },
-];
+var robotData = [];
 
 var bushData = generateBushes();
 
@@ -229,7 +223,11 @@ function updateRobots() {
     }
   }
   if (robotData.length < MAX_ACTIVE_ROBOTS) {
-    var lastRobotX = robotData[robotData.length - 1].x;
+    var lastRobotX = CANVAS_WIDTH;
+    if (robotData.length > 0) {
+      lastRobotX = robotData[robotData.length -1].x;
+    }
+
     var newRobotX =
       lastRobotX +
       MIN_DISTANCE_BETWEEN_ROBOTS +
