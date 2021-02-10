@@ -94,6 +94,13 @@ function generateBushes() {
   }
   return generatedBushData;
 }
+var nanonautSpriteSheet = {
+  nrFramesPerRow: 5,
+  spriteWidth: NANONAUT_WIDTH,
+  spriteHeight: NANONAUT_HEIGHT,
+  image: nanonautImage
+}
+
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -226,4 +233,20 @@ function draw() {
       GROUND_Y - bushData[i].y - cameraY
     );
   }
+
+  //Narysuj animowanego duszka
+  function drawAnimatedSprite(screenX, screenY, frameNr, spriteSheet) {
+    var spriteSheetRow = Math.floor(frameNr / spriteSheet.nrFramesPerRow);
+    var spriteSheetColumn = frameNr % spriteSheet.nrFramesPerRow;
+    var spriteSheetX = spriteSheetColumn * spriteSheet.spriteWidth;
+    var spriteSheetY = spriteSheetRow * spriteSheet.spriteHeight;
+
+    c.drawImage(
+      spriteSheet.image,
+      spriteSheetX, spriteSheetY,
+      spriteSheet.spriteWidth, spriteSheet.spriteHeight, screenX, screenY,
+      spriteSheet.spriteWidth, spriteSheet.spriteHeight
+    );
+  }
+
 }
