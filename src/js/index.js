@@ -23,7 +23,9 @@ var NANONAUT_NR_ANIMATION_FRAMES = 7;
 var NANONAUT_ANIMATION_SPEED = 3;
 var ROBOT_WIDTH = 141;
 var ROBOT_HEIGHT = 139;
-
+var ROBOT_NR_ANIMATION_FRAMES = 9;
+var ROBOT_ANIMATION_SPEED = 5;
+var ROBOT_X_SPEED = 4;
 /*
   _  __                   __                          _                                  
  | |/ /   ___    _ __    / _|       __      __  ___  | |_    ___   _ __    _ __     __ _ 
@@ -197,6 +199,22 @@ function update() {
       bushData[i].x += 2 * CANVAS_WIDTH + 150;
     }
   }
+
+  //Zaktualizuj roboty
+  updateRobots();
+}
+
+function updateRobots() {
+  // Przemieszczanie i animowanie robotów
+    for (var k = 0; k<robotData.length; k++) {
+    robotData[k].x -= ROBOT_X_SPEED;
+      if ((gameFrameCounter % ROBOT_ANIMATION_SPEED) === 0) {
+        robotData[k].frameNr = robotData[k].frameNr + 1;
+        if (robotData[k].frameNr >= ROBOT_NR_ANIMATION_FRAMES) {
+          robotData[k].frameNr = 0;
+        }
+      }
+    }
 }
 /*
   ____                                                     _        
