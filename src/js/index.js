@@ -26,6 +26,9 @@ var ROBOT_HEIGHT = 139;
 var ROBOT_NR_ANIMATION_FRAMES = 9;
 var ROBOT_ANIMATION_SPEED = 5;
 var ROBOT_X_SPEED = 4;
+var MIN_DISTANCE_BETWEEN_ROBOTS = 400;
+var MAX_DISTANCE_BETWEEN_ROBOTS = 1200;
+var MAX_ACTIVE_ROBOTS = 3;
 /*
   _  __                   __                          _                                  
  | |/ /   ___    _ __    / _|       __      __  ___  | |_    ___   _ __    _ __     __ _ 
@@ -206,15 +209,38 @@ function update() {
 
 function updateRobots() {
   // Przemieszczanie i animowanie robotów
-    for (var k = 0; k<robotData.length; k++) {
+  for (var k = 0; k < robotData.length; k++) {
     robotData[k].x -= ROBOT_X_SPEED;
-      if ((gameFrameCounter % ROBOT_ANIMATION_SPEED) === 0) {
-        robotData[k].frameNr = robotData[k].frameNr + 1;
-        if (robotData[k].frameNr >= ROBOT_NR_ANIMATION_FRAMES) {
-          robotData[k].frameNr = 0;
-        }
+    if (gameFrameCounter % ROBOT_ANIMATION_SPEED === 0) {
+      robotData[k].frameNr = robotData[k].frameNr + 1;
+      if (robotData[k].frameNr >= ROBOT_NR_ANIMATION_FRAMES) {
+        robotData[k].frameNr = 0;
       }
     }
+  }
+  // Usuń roboty, które znalazły się poza ekranem
+  var robotIndex = 0;
+  while (robotIndex < robotData.length) {
+    if (robotData[robotIndex].x < cameraX - ROBOT_WIDTH) {
+      robotData.splice(robotIndex, 1);
+      console.log("Usunięto robota!");
+    } else {
+      robotIndex += 1;
+    }
+  }
+  if (robotData.length < MAX_ACTIVE_ROBOTS) {
+    var lastRobotX = robotData[robotData.length - 1].x;
+    var newRobotX =
+      lastRobotX +
+      MIN_DISTANCE_BETWEEN_ROBOTS +
+      Math.random() *
+        (MAX_DISTANCE_BETWEEN_ROBOTS - MIN_DISTANCE_BETWEEN_ROBOTS);
+    robotData.push({
+      x: newRobotX,
+      y: GROUND_Y - ROBOT_HEIGHT,
+      frameNr: 0,
+    });
+  }
 }
 /*
   ____                                                     _        
