@@ -30,6 +30,7 @@ var MIN_DISTANCE_BETWEEN_ROBOTS = 400;
 var MAX_DISTANCE_BETWEEN_ROBOTS = 1200;
 var MAX_ACTIVE_ROBOTS = 3;
 var SCREENSHAKE_RADIUS = 16;
+var NANONAUT_MAX_HEALTH = 100;
 /*
   _  __                   __                          _                                  
  | |/ /   ___    _ __    / _|       __      __  ___  | |_    ___   _ __    _ __     __ _ 
@@ -135,6 +136,8 @@ var robotCollisionRectangle = {
 
 var screenshake = false;
 
+var nanonautHealth = NANONAUT_MAX_HEALTH;
+
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -219,6 +222,7 @@ function update() {
   var nanonautTouchedARobot = updateRobots();
   if (nanonautTouchedARobot) {
     screenshake = true;
+    if (nanonautHealth > 0) nanonautHealth -= 1;
   }
 }
 
@@ -406,6 +410,13 @@ function draw() {
     nanonautFrameNr,
     nanonautSpriteSheet
   );
+
+  //Narysuj pasek zdrowia Nanonauty
+  c.fillStyle = "red";
+  c.fillRect(400, 10, nanonautHealth / NANONAUT_MAX_HEALTH * 380, 20);
+  c.strokeStyle = "red";
+  c.strokeRect(400, 10, 380, 20);
+
 
   //Narysuj animowanego duszka
   function drawAnimatedSprite(screenX, screenY, frameNr, spriteSheet) {
