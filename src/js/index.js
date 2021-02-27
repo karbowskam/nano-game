@@ -225,7 +225,7 @@ function updateRobots() {
   if (robotData.length < MAX_ACTIVE_ROBOTS) {
     var lastRobotX = CANVAS_WIDTH;
     if (robotData.length > 0) {
-      lastRobotX = robotData[robotData.length -1].x;
+      lastRobotX = robotData[robotData.length - 1].x;
     }
 
     var newRobotX =
@@ -238,6 +238,30 @@ function updateRobots() {
       y: GROUND_Y - ROBOT_HEIGHT,
       frameNr: 0,
     });
+  }
+  function doesNanonautOverlapRobot(
+    nanonautX,
+    nanonautY,
+    nanonautWidth,
+    nanonautHeight,
+    robotX,
+    robotY,
+    robotWidth,
+    robotHeight
+  ) {
+    var nanonautOverlapsRobotOnXAxis = doesNanonautOverlapRobotAlongOneAxis(
+      nanonautX,
+      nanonautX + nanonautWidth,
+      robotX,
+      robotX + robotWidth
+    );
+    var nanonautOverlapsRobotOnYAxis = doesNanonautOverlapRobotAlongOneAxis(
+      nanonautX,
+      nanonautY + nanonautHeight,
+      robotY,
+      robotY + robotHeight
+    );
+    return nanonautOverlapsRobotOnXAxis && nanonautOverlapsRobotOnYAxis;
   }
 }
 /*
