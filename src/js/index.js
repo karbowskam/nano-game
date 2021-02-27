@@ -189,7 +189,7 @@ function onKeyUp(event) {
 */
 
 function update() {
-  if (gameMode !=PLAY_GAME_MODE) return;
+  if (gameMode != PLAY_GAME_MODE) return;
   gameFrameCounter = gameFrameCounter + 1;
   nanonautX = nanonautX + NANONAUT_X_SPEED;
   if (spaceKeyIsPressed && !nanonautIsInTheAir) {
@@ -233,9 +233,9 @@ function update() {
     gameMode = GAME_OVER_GAME_MODE;
     screenshake = false;
   }
-}
+ }
 
-function updateRobots() {
+ function updateRobots() {
   var nanonautTouchedARobot = false;
   // Przemieszczanie i animowanie robotów
   for (var k = 0; k < robotData.length; k++) {
@@ -419,6 +419,12 @@ function draw() {
     nanonautFrameNr,
     nanonautSpriteSheet
   );
+
+  //Wyświetl odległość pokonaną przez Nanonautę
+  var nanonautDistance = nanonautX / 100;
+  c.fillStyle = "black";
+  c.font = "48px sans-serif";
+  c.fillText(nanonautDistance.toFixed(0) + "m", 20, 40);
 
   //Narysuj pasek zdrowia Nanonauty
   c.fillStyle = "red";
