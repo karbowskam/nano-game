@@ -29,6 +29,7 @@ var ROBOT_X_SPEED = 4;
 var MIN_DISTANCE_BETWEEN_ROBOTS = 400;
 var MAX_DISTANCE_BETWEEN_ROBOTS = 1200;
 var MAX_ACTIVE_ROBOTS = 3;
+var SCREENSHAKE_RADIUS = 16;
 /*
   _  __                   __                          _                                  
  | |/ /   ___    _ __    / _|       __      __  ___  | |_    ___   _ __    _ __     __ _ 
@@ -131,6 +132,9 @@ var robotCollisionRectangle = {
   width: 50,
   height: 100,
 };
+
+var screenshake = false;
+
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -211,10 +215,15 @@ function update() {
   }
 
   //Zaktualizuj roboty
-  updateRobots();
+  screenshake = false;
+  var nanonautTouchedARobot = updateRobots();
+  if (nanonautTouchedARobot) {
+    screenshake = true;
+  }
 }
 
 function updateRobots() {
+  var nanonautTouchedARobot = false;
   // Przemieszczanie i animowanie robotów
   for (var k = 0; k < robotData.length; k++) {
     if (
@@ -229,18 +238,18 @@ function updateRobots() {
         robotCollisionRectangle.height
       )
     ) {
+      nanonautTouchedARobot = true;
       console.log("AUĆ!");
     }
 
     robotData[k].x -= ROBOT_X_SPEED;
-    if (gameFrameCounter % ROBOT_ANIMATION_SPEED === 0) {
+    if ((gameFrameCounter % ROBOT_ANIMATION_SPEED) === 0) {
       robotData[k].frameNr = robotData[k].frameNr + 1;
       if (robotData[k].frameNr >= ROBOT_NR_ANIMATION_FRAMES) {
         robotData[k].frameNr = 0;
       }
     }
   }
-
 
   // Usuń roboty, które znalazły się poza ekranem
   var robotIndex = 0;
@@ -268,14 +277,29 @@ function updateRobots() {
       y: GROUND_Y - ROBOT_HEIGHT,
       frameNr: 0,
     });
+    
   }
-
-function doesNanonautOverlapRobotAlongOneAxis(nanonautNearX, nanonautFarX, robotNearX, robotFarX) {
-  var nanonautOverlapsNearRobotEdge = (nanonautFarX >= robotNearX) && (nanonautFarX <= robotFarX);
-  var nanonautOverlapsFarRobotEdge = (nanonautNearX >= robotNearX) && (nanonautNearX <= robotFarX);
-  var nanonautOverlapsEntireRobot = (nanonautNearX <= robotNearX) && (nanonautFarX >= robotFarX);
-  return nanonautOverlapsNearRobotEdge || nanonautOverlapsFarRobotEdge || nanonautOverlapsEntireRobot;
+  return nanonautTouchedARobot;
 }
+
+  function doesNanonautOverlapRobotAlongOneAxis(
+    nanonautNearX,
+    nanonautFarX,
+    robotNearX,
+    robotFarX
+  ) {
+    var nanonautOverlapsNearRobotEdge =
+      nanonautFarX >= robotNearX && nanonautFarX <= robotFarX;
+    var nanonautOverlapsFarRobotEdge =
+      nanonautNearX >= robotNearX && nanonautNearX <= robotFarX;
+    var nanonautOverlapsEntireRobot =
+      nanonautNearX <= robotNearX && nanonautFarX >= robotFarX;
+    return (
+      nanonautOverlapsNearRobotEdge ||
+      nanonautOverlapsFarRobotEdge ||
+      nanonautOverlapsEntireRobot
+    );
+  }
 
   function doesNanonautOverlapRobot(
     nanonautX,
@@ -301,7 +325,7 @@ function doesNanonautOverlapRobotAlongOneAxis(nanonautNearX, nanonautFarX, robot
     );
     return nanonautOverlapsRobotOnXAxis && nanonautOverlapsRobotOnYAxis;
   }
-}
+
 
 /*
   ____                                                     _        
@@ -314,6 +338,14 @@ function doesNanonautOverlapRobotAlongOneAxis(nanonautNearX, nanonautFarX, robot
 */
 
 function draw() {
+  var shakenCameraX = cameraX;
+  var shakenCameraY = cameraY;
+  if (screenshake) {
+    shakenCameraX += (Math.random() - 0.5) * SCREENSHAKE_RADIUS;
+    shakenCameraY += (Math.random() - 0.5) * SCREENSHAKE_RADIUS;
+    // TO DO: zmień wartości zmiennych shakenCameraX i Y, aby potrząsnąć ekranem
+  }
+
   c.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   // Narysuj niebo
@@ -321,7 +353,7 @@ function draw() {
   c.fillRect(0, 0, CANVAS_WIDTH, GROUND_Y - 40);
 
   // Narysuj tło
-  var backgroundX = -(cameraX % BACKGROUND_WIDTH);
+  var backgroundX = -(shakenCameraX % BACKGROUND_WIDTH);
   c.drawImage(backgroundImage, backgroundX, -210);
   c.drawImage(backgroundImage, backgroundX + BACKGROUND_WIDTH, -210);
 
@@ -352,16 +384,16 @@ function draw() {
   for (var i = 0; i < bushData.length; i++) {
     c.drawImage(
       bushData[i].image,
-      bushData[i].x - cameraX,
-      GROUND_Y - bushData[i].y - cameraY
+      bushData[i].x - shakenCameraX,
+      GROUND_Y - bushData[i].y - shakenCameraY
     );
   }
 
   //Narysuj roboty
   for (var j = 0; j < robotData.length; j++) {
     drawAnimatedSprite(
-      robotData[j].x - cameraX,
-      robotData[j].y - cameraY,
+      robotData[j].x - shakenCameraX,
+      robotData[j].y - shakenCameraY,
       robotData[j].frameNr,
       robotSpriteSheet
     );
@@ -369,8 +401,8 @@ function draw() {
 
   //Narysuj Nanonautę
   drawAnimatedSprite(
-    nanonautX - cameraX,
-    nanonautY - cameraY,
+    nanonautX - shakenCameraX,
+    nanonautY - shakenCameraY,
     nanonautFrameNr,
     nanonautSpriteSheet
   );
