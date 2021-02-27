@@ -31,6 +31,8 @@ var MAX_DISTANCE_BETWEEN_ROBOTS = 1200;
 var MAX_ACTIVE_ROBOTS = 3;
 var SCREENSHAKE_RADIUS = 16;
 var NANONAUT_MAX_HEALTH = 100;
+var PLAY_GAME_MODE = 0;
+var GAME_OVER_GAME_MODE = 1;
 /*
   _  __                   __                          _                                  
  | |/ /   ___    _ __    / _|       __      __  ___  | |_    ___   _ __    _ __     __ _ 
@@ -135,8 +137,9 @@ var robotCollisionRectangle = {
 };
 
 var screenshake = false;
-
 var nanonautHealth = NANONAUT_MAX_HEALTH;
+var gameMode = PLAY_GAME_MODE;
+
 
 /*
   ____           _     _                     _     __                             
@@ -186,6 +189,7 @@ function onKeyUp(event) {
 */
 
 function update() {
+  if (gameMode !=PLAY_GAME_MODE) return;
   gameFrameCounter = gameFrameCounter + 1;
   nanonautX = nanonautX + NANONAUT_X_SPEED;
   if (spaceKeyIsPressed && !nanonautIsInTheAir) {
@@ -223,6 +227,11 @@ function update() {
   if (nanonautTouchedARobot) {
     screenshake = true;
     if (nanonautHealth > 0) nanonautHealth -= 1;
+  }
+  //Sprawdź czy gra się skończyła
+  if (nanonautHealth <= 0) {
+    gameMode = GAME_OVER_GAME_MODE;
+    screenshake = false;
   }
 }
 
@@ -383,7 +392,7 @@ function draw() {
     NANONAUT_WIDTH,
     NANONAUT_HEIGHT
   );
-*/
+ */
   //Narysuj krzaczki
   for (var i = 0; i < bushData.length; i++) {
     c.drawImage(
@@ -436,5 +445,11 @@ function draw() {
       spriteSheet.spriteWidth,
       spriteSheet.spriteHeight
     );
+  }
+  //Jeśli gra się skończyła wyświetl napis "koniec gry"
+  if (gameMode == GAME_OVER_GAME_MODE) {
+    c.fillStyle = "black";
+    c.font = "96px sans-serif";
+    c.fillText("GAME OVER", 120, 300);
   }
 }
