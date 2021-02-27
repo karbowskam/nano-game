@@ -118,6 +118,19 @@ var nanonautSpriteSheet = {
   image: nanonautImage,
 };
 
+var nanonautCollisionRectangle = {
+  xOffset: 60,
+  yOffset: 20,
+  width: 50,
+  height: 200,
+};
+
+var robotCollisionRectangle = {
+  xOffset: 50,
+  yOffset: 20,
+  width: 50,
+  height: 100,
+};
 /*
   ____           _     _                     _     __                             
  |  _ \    ___  | |_  | |   __ _      __ _  | |   /_/   __      __  _ __     __ _ 
@@ -204,6 +217,21 @@ function update() {
 function updateRobots() {
   // Przemieszczanie i animowanie robotów
   for (var k = 0; k < robotData.length; k++) {
+    if (
+      doesNanonautOverlapRobot(
+        nanonautX + nanonautCollisionRectangle.xOffset,
+        nanonautY + nanonautCollisionRectangle.yOffset,
+        nanonautCollisionRectangle.width,
+        nanonautCollisionRectangle.height,
+        robotData[k].x + robotCollisionRectangle.xOffset,
+        robotData[k].y + robotCollisionRectangle.yOffset,
+        robotCollisionRectangle.width,
+        robotCollisionRectangle.height
+      )
+    ) {
+      console.log("AUĆ!");
+    }
+
     robotData[k].x -= ROBOT_X_SPEED;
     if (gameFrameCounter % ROBOT_ANIMATION_SPEED === 0) {
       robotData[k].frameNr = robotData[k].frameNr + 1;
@@ -212,6 +240,8 @@ function updateRobots() {
       }
     }
   }
+
+
   // Usuń roboty, które znalazły się poza ekranem
   var robotIndex = 0;
   while (robotIndex < robotData.length) {
@@ -239,6 +269,14 @@ function updateRobots() {
       frameNr: 0,
     });
   }
+
+function doesNanonautOverlapRobotAlongOneAxis(nanonautNearX, nanonautFarX, robotNearX, robotFarX) {
+  var nanonautOverlapsNearRobotEdge = (nanonautFarX >= robotNearX) && (nanonautFarX <= robotFarX);
+  var nanonautOverlapsFarRobotEdge = (nanonautNearX >= robotNearX) && (nanonautNearX <= robotFarX);
+  var nanonautOverlapsEntireRobot = (nanonautNearX <= robotNearX) && (nanonautFarX >= robotFarX);
+  return nanonautOverlapsNearRobotEdge || nanonautOverlapsFarRobotEdge || nanonautOverlapsEntireRobot;
+}
+
   function doesNanonautOverlapRobot(
     nanonautX,
     nanonautY,
@@ -256,7 +294,7 @@ function updateRobots() {
       robotX + robotWidth
     );
     var nanonautOverlapsRobotOnYAxis = doesNanonautOverlapRobotAlongOneAxis(
-      nanonautX,
+      nanonautY,
       nanonautY + nanonautHeight,
       robotY,
       robotY + robotHeight
@@ -264,6 +302,7 @@ function updateRobots() {
     return nanonautOverlapsRobotOnXAxis && nanonautOverlapsRobotOnYAxis;
   }
 }
+
 /*
   ____                                                     _        
  |  _ \   _   _   ___    ___   __      __   __ _   _ __   (_)   ___ 
