@@ -1,16 +1,29 @@
-# Installation
+# Nanonaut game
+## Table of contents
 
-Simple toolkit for my static websites development.
+- [Overview](#overview)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+## Overview
 
-## How to use it?
+It is a simple platform game that runs in a web browser. I made the game with the Polish book "Baw się kodem! Twoja własna gra. CoderDojo Nano".
+### Screenshot
 
-Go to https://github.com/karbowskam/my-starter-kit (this repository) and click on `Use this template` button to generate a new repository based on this starter kit. 
-After that clone it to your computer, go to the project directory in console and type `npm install`.
+![](./src/img/nano-game.png)
 
-## Available scripts
+### Links
 
-`npm run start` - runs development mode
+- Live Site URL: (https://karbowskam.github.io/nano-game/)
 
-`npm run build` - runs build process for production
+## My process
 
-`npm run publish` - runs build process and publish the page using `gh-pages` branch
+### Built with
+
+- Gulp
+- SASS
+- Java Script
+
+
